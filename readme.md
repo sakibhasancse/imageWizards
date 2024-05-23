@@ -23,12 +23,12 @@ This project provides a web application for image processing using React for the
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-username/your-repository.git
+   git clone https://github.com/sakibhasancse/imageWizards.git
    ```
 
 2. Navigate to the project directory:
    ```sh
-   cd your-repository
+   cd imageWizards
    ```
 
 3. Start the application using Docker Compose:
@@ -47,7 +47,7 @@ This project provides a web application for image processing using React for the
 
 2. Navigate to the project directory:
    ```sh
-   cd your-repository
+   cd imageWizards
    ```
 
 3. Install dependencies for the frontend:
