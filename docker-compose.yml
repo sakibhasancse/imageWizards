@@ -2,7 +2,7 @@ version: '3.8'
 services:
   frontend:
     build:
-      context: ./client
+      context: ./frontend
     ports:
       - "3000:3000"
     networks:
@@ -10,9 +10,9 @@ services:
 
   backend:
     build:
-      context: ./server
+      context: ./backend
     volumes:
-      - ./server/uploads:/app/uploads
+      - ./backend/uploads:/app/uploads
     ports:
       - "5000:5000"
     networks:
