@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    networks:
+      - image-wizers
+
+  backend:
+    build:
+      context: ./server
+    volumes:
+      - ./server/uploads:/app/uploads
+    ports:
+      - "5000:5000"
+    networks:
+      - image-wizers
+
+networks:
+  image-wizers:
+    driver: bridge
