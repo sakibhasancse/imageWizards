@@ -11,52 +11,63 @@ def process_image(image_path, task):
     _, buffer = cv2.imencode('.jpg', processed_image)
     return base64.b64encode(buffer).decode('utf-8')
 
-def extract_blood_vessels(image_path):
+def extract_blood_vessels(fundus_image_path):
     # Load the image
-    image = cv2.imread(image_path)
+    image = cv2.imread(fundus_image_path)
+
+    # Convert to grayscale
+    green_channel = image[:, :, 1]
+
+    # Apply CLAHE to enhance the contrast of the image
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    enhanced_image = clahe.apply(green_channel)
+
+    # Apply median filter to reduce noise
+    median = cv2.medianBlur(enhanced_image, 5)
+
+    # Use Sobel filter to detect edges
+    sobelX = cv2.Sobel(median, cv2.CV_64F, 1, 0, ksize=5)
+    sobelY = cv2.Sobel(median, cv2.CV_64F, 0, 1, ksize=5)
+    sobel = np.sqrt(sobelX**2 + sobelY**2)
+
+    # Normalize the result to the range 0-255
+    sobel = np.uint8(255 * sobel / np.max(sobel))
+
+    # Apply a binary threshold to get a binary image
+    _, binary_image = cv2.threshold(sobel, 30, 255, cv2.THRESH_BINARY)
+
+    # Use morphological operations to remove small noise and connect blood vessel segments
+    kernel = np.ones((3, 3), np.uint8)
+    morphed_image = cv2.morphologyEx(binary_image, cv2.MORPH_CLOSE, kernel, iterations=1)
+
+    return morphed_image
+
+def extract_lesions(melanoma_image_path):
+    # Load the image
+    image = cv2.imread(melanoma_image_path)
     
-    # Convert the image to grayscale
+    # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     
-    # Apply adaptive thresholding
-    thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 15, 2)
+    # Apply image processing to extract lesions
+    # Example: Apply thresholding to isolate lesions
+    _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)
     
-    # Apply morphological operations
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
-    opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
-    closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
+    # Apply morphological operations to reduce noise
+    kernel = np.ones((5, 5), np.uint8)
+    morph = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+    morph = cv2.morphologyEx(morph, cv2.MORPH_OPEN, kernel)
     
-    # Apply canny edge detection
-    edges = cv2.Canny(closing, 50, 150)
+    # Find contours from the processed image
+    contours, _ = cv2.findContours(morph, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
-    # Find contours
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Create a mask to draw the lesions
+    lesion_mask = np.zeros_like(gray)
     
-    # Draw contours on a blank image
-    result = np.zeros_like(image)
-    cv2.drawContours(result, contours, -1, (255,255,255), 1)
+    # Filter contours by area and draw them with white color
+    min_contour_area = 100  # Adjust this value based on the size of the lesions
+    for contour in contours:
+        if cv2.contourArea(contour) > min_contour_area:
+            cv2.drawContours(lesion_mask, [contour], -1, (255), thickness=cv2.FILLED)
     
-    return result
-
-
-def extract_lesions(image_path):
-    # Load the image
-    image = cv2.imread(image_path)
-    
-    # Convert the image to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    
-    # Apply Gaussian blur
-    blur = cv2.GaussianBlur(gray, (5, 5), 0)
-    
-    # Apply thresholding
-    _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    
-    # Find contours
-    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    
-    # Draw contours on a blank image
-    result = np.zeros_like(image)
-    cv2.drawContours(result, contours, -1, (255,255,255), -1)
-    
-    return result
+    return lesion_mask

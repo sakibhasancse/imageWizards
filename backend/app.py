@@ -12,6 +12,8 @@ if not os.path.exists('./uploads'):
 @app.route('/upload', methods=['POST'])
 def upload_image():
     file = request.files['image']
+    if not file:
+        return jsonify({"error": "No file found"})
     task = request.form.get('task', 'extract_blood_vessels')
 
     file_path = f'./uploads/{file.filename}'
