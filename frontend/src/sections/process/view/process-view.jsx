@@ -78,7 +78,7 @@ const ProcessFileView = () => {
     link.click();
     document.body.removeChild(link);
   };
-  
+
   const loadPreviewImage = (image) => {
     setProcessedImage(image.proc)
     setOriginalImage(image.org)
