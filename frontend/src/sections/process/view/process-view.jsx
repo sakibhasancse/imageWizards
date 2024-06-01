@@ -25,7 +25,8 @@ const ProcessFileView = () => {
 
   const [taskInfo, setTaskInfo] = useState({
     task: "",
-    page_title: ""
+    page_title: "",
+    images: []
   });
 
   useEffect(() => {
@@ -86,7 +87,7 @@ const ProcessFileView = () => {
         !originalImage && (
           <Grid container spacing={3} justifyContent="center" sx={{ mb: 5 }}>
             <Grid item xs={12} md={6}>
-              <Menu handleImageUpload={handleImageUpload} navigate={navigate} />
+              <Menu handleImageUpload={handleImageUpload} navigate={navigate} suggestedImages={taskInfo.images} />
             </Grid>
           </Grid>
         )
@@ -140,11 +141,34 @@ const getNameAndTaskByRoute = (path_name) => {
   if (path_name === 'lesion') {
     defaults.task = "extract_lesions";
     defaults.page_title = "Extract Lesions";
+    defaults.images = suggestedLesionsImages()
   } else if (path_name === 'vessel') {
     defaults.task = "extract_blood_vessels";
     defaults.page_title = "Extract blood vessels";
+    defaults.images = suggestedVesselImages()
   } else defaults = null
 
 
   return defaults;
 };
+
+const suggestedLesionsImages = () => {
+  const baseUrl = import.meta.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:5000"
+  return [
+    `${baseUrl}/assets/0.png`,
+    `${baseUrl}/assets/1.png`,
+    `${baseUrl}/assets/2.png`,
+    `${baseUrl}/assets/3.png`
+  ];
+}
+
+
+const suggestedVesselImages = () => {
+  const baseUrl = import.meta.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:5000"
+  return [
+    `${baseUrl}/assets/4.jpg`,
+    `${baseUrl}/assets/5.jpg`,
+    `${baseUrl}/assets/6.jpg`,
+    `${baseUrl}/assets/7.jpg`
+  ];
+}

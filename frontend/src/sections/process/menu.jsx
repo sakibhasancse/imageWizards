@@ -8,14 +8,14 @@ import Typography from '@mui/material/Typography';
 
 import ImageButton from 'src/components/image/image';
 
-const suggestedImages = [
-    'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
-    'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
-    'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
-    'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg'
-];
+// const suggestedImages = [
+//     'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
+//     'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
+//     'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
+//     'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg'
+// ];
 
-const Menu = ({ handleImageUpload, navigate }) => (
+const Menu = ({ handleImageUpload, navigate, suggestedImages }) => (
     <Card sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 600, margin: 'auto' }}>
         <label htmlFor="file-upload">
             <input
@@ -61,7 +61,8 @@ const Menu = ({ handleImageUpload, navigate }) => (
 
 Menu.propTypes = {
     handleImageUpload: PropTypes.func.isRequired,
-    navigate: PropTypes.func
+    navigate: PropTypes.func,
+    suggestedImages: PropTypes.arrayOf(PropTypes.string)
 };
 
 export default Menu;

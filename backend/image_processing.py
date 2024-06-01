@@ -1,7 +1,9 @@
+import os
 import cv2
 import base64
 import numpy as np
 import time
+PROCESSED_FOLDER = './uploads/processed'
 
 def process_image(image_path, task):
     start_time = time.time()  # Start the timer
@@ -14,17 +16,17 @@ def process_image(image_path, task):
     elif task == 'extract_lesions':
         processed_image = extract_lesions(image_path)
     else:
-        processed_image = image_path
+        processed_image = cv2.imread(image_path)
 
-    _, buffer = cv2.imencode('.jpg', processed_image)
-    encoded_image = base64.b64encode(buffer).decode('utf-8')
+    processed_image_path = os.path.join(PROCESSED_FOLDER, os.path.basename(image_path))
+    cv2.imwrite(processed_image_path, processed_image)
 
     end_time = time.time()  # End the timer
     time_taken = end_time - start_time  # Calculate the elapsed time
 
     print(f"Time taken for {task}: {time_taken:.2f} seconds")  # Print the time taken
 
-    return encoded_image
+    return processed_image_path
 
 def extract_blood_vessels(fundus_image_path):
     # Load the image
