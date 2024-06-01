@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import DownloadingOutlined from '@mui/icons-material/DownloadingOutlined';
 
 import { uploadImage } from 'src/services/api';
 
@@ -17,7 +18,8 @@ const ProcessFileView = () => {
   const [originalImage, setOriginalImage] = useState(null);
   const [processedImage, setProcessedImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [uploadedImages, setUploadedImages] = useState([])
+  const [oldImages, setOldImages] = useState([])
+  const [isOldImage, setIsOldImage] = useState(false)
   const { name } = useParams();
   const navigate = useNavigate();
 
@@ -28,22 +30,30 @@ const ProcessFileView = () => {
 
   useEffect(() => {
     const info = getNameAndTaskByRoute(name);
+    if (!info) navigate('/404')
     setTaskInfo(info);
-  }, [name]);
+  }, [name, navigate]);
 
   const handleImageUpload = (file) => {
-    if (processedImage) {
-      setUploadedImages((oldImage) => [...oldImage, { org: originalImage, proc: processedImage }])
-    }
-    setOriginalImage(URL.createObjectURL(file));
+    setLoading(true);
+    const newFile = URL.createObjectURL(file)
+    setOriginalImage(newFile);
 
     const formData = new FormData();
     formData.append('image', file);
     formData.append('task', taskInfo.task);
 
-    setLoading(true);
     uploadImage(formData).then(response => {
-      setProcessedImage(`data:image/jpeg;base64,${response.data.image}`);
+      const processedFile = `data:image/jpeg;base64,${response.data.image}`
+      setProcessedImage(processedFile);
+
+      if (!isOldImage) {
+        setOldImages((oldImage) => {
+          oldImage.unshift({ org: newFile, proc: processedFile })
+          return oldImage
+        })
+      } else setIsOldImage(false)
+
       setLoading(false);
     }).catch(err => {
       setLoading(false);
@@ -63,6 +73,7 @@ const ProcessFileView = () => {
   const loadPreviewImage = (image) => {
     setProcessedImage(image.proc)
     setOriginalImage(image.org)
+    setIsOldImage(true)
   }
 
   return (
@@ -92,7 +103,13 @@ const ProcessFileView = () => {
               {loading ? <ProgressBar loading={loading} /> :
                 <>
                   <ImageView imageSrc={processedImage} altText="Processed Image" />
-                  <Button variant="contained" sx={{ mt: 2 }} onClick={handleDownload}>
+                  <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<DownloadingOutlined />}
+                    sx={{ mt: 2, mb: 1 }} onClick={handleDownload}>
                     Download Image
                   </Button>
                 </>
@@ -100,10 +117,10 @@ const ProcessFileView = () => {
             </Grid>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{ mt: 2 }} >
             <NewImageMenu handleImageUpload={handleImageUpload}
               loadPreviewImage={loadPreviewImage}
-              uploadedImages={uploadedImages}
+              oldImages={oldImages}
               navigate={navigate}
               sx={{ position: 'absolute', bottom: 16, left: 16 }} />
           </Grid>
@@ -118,15 +135,16 @@ const ProcessFileView = () => {
 export default ProcessFileView;
 
 const getNameAndTaskByRoute = (path_name) => {
-  const defaults = {
-    task: "extract_blood_vessels",
-    page_title: "Extract blood vessels"
-  };
+  let defaults = {}
 
   if (path_name === 'lesion') {
     defaults.task = "extract_lesions";
     defaults.page_title = "Extract Lesions";
-  }
+  } else if (path_name === 'vessel') {
+    defaults.task = "extract_blood_vessels";
+    defaults.page_title = "Extract blood vessels";
+  } else defaults = null
+
 
   return defaults;
 };

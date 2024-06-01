@@ -17,7 +17,7 @@ const AddImageButton = styled(IconButton)(({ theme }) => ({
     }
 }));
 
-const NewImageMenu = ({ handleImageUpload, loadPreviewImage, uploadedImages }) => (
+const NewImageMenu = ({ handleImageUpload, loadPreviewImage, oldImages }) => (
     <Grid container spacing={2} alignItems="center">
         <Grid item>
             <label htmlFor="add-image">
@@ -33,7 +33,7 @@ const NewImageMenu = ({ handleImageUpload, loadPreviewImage, uploadedImages }) =
                 </AddImageButton>
             </label>
         </Grid>
-        {uploadedImages.map((image, index) => (
+        {oldImages.map((image, index) => (
             <Grid item key={index}>
                 <ImageButton
                     type="button"
@@ -57,7 +57,7 @@ const NewImageMenu = ({ handleImageUpload, loadPreviewImage, uploadedImages }) =
 
 NewImageMenu.propTypes = {
     handleImageUpload: PropTypes.func.isRequired,
-    uploadedImages: PropTypes.arrayOf(
+    oldImages: PropTypes.arrayOf(
         PropTypes.shape({
             org: PropTypes.string.isRequired,
             proc: PropTypes.string.isRequired
