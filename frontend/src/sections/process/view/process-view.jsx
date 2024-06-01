@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
@@ -9,10 +10,10 @@ import { uploadImage } from 'src/services/api';
 
 import Menu from '../menu';
 import ImageView from '../Image-view';
+import NewImageMenu from '../new-image';
 import ProgressBar from '../progress-bar';
 
-
-const ProcessFileVIew = () => {
+const ProcessFileView = () => {
   const [originalImage, setOriginalImage] = useState(null);
   const [processedImage, setProcessedImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,6 @@ const ProcessFileVIew = () => {
     setTaskInfo(info);
   }, [name]);
 
-
   const handleImageUpload = (file) => {
     setOriginalImage(URL.createObjectURL(file));
 
@@ -43,39 +43,65 @@ const ProcessFileVIew = () => {
       setLoading(false);
     }).catch(err => {
       setLoading(false);
-      console.log("Error happen", err.message)
-    })
+      console.log("Error happen", err.message);
+    });
+  };
+
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = processedImage;
+    link.download = 'processed-image.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" sx={{ position: 'relative' }}>
       <Typography variant="h4" sx={{ mb: 5 }}>
         {taskInfo.page_title}
       </Typography>
-      <Grid container spacing={3} justifyContent="center" sx={{ mb: 5 }}>
-        <Grid item xs={12} md={6}>
-          <Menu handleImageUpload={handleImageUpload} navigate={navigate} />
-        </Grid>
-      </Grid>
 
-      {originalImage && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <ImageView imageSrc={originalImage} altText="Original Image" />
+      {
+        !originalImage && (
+          <Grid container spacing={3} justifyContent="center" sx={{ mb: 5 }}>
+            <Grid item xs={12} md={6}>
+              <Menu handleImageUpload={handleImageUpload} navigate={navigate} />
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            {loading ? <ProgressBar loading={loading} /> :
-              <ImageView imageSrc={processedImage} altText="Processed Image" />
-            }
+        )
+      }
+
+      { originalImage && (
+        <>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <ImageView imageSrc={originalImage} altText="Original Image" />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              {loading ? <ProgressBar loading={loading} /> :
+                <>
+                  <ImageView imageSrc={processedImage} altText="Processed Image" />
+                  <Button variant="contained" sx={{ mt: 2 }} onClick={handleDownload}>
+                    Download Image
+                  </Button>
+                </>
+              }
+            </Grid>
           </Grid>
-        </Grid>
-      )}
+
+          <Grid item xs={12}>
+            <NewImageMenu handleImageUpload={handleImageUpload} navigate={navigate} sx={{ position: 'absolute', bottom: 16, left: 16 }} />
+          </Grid>
+        </>
+      )
+      }
+
     </Container>
   );
 };
 
-export default ProcessFileVIew;
-
+export default ProcessFileView;
 
 const getNameAndTaskByRoute = (path_name) => {
   const defaults = {
