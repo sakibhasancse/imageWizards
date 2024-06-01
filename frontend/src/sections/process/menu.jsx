@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
-import styled from '@mui/system/styled';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+
+import ImageButton from 'src/components/image/image';
 
 const suggestedImages = [
     'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
@@ -13,18 +14,6 @@ const suggestedImages = [
     'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
     'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg'
 ];
-
-const ImageButton = styled('button')({
-    border: 'none',
-    background: 'none',
-    padding: 0,
-    cursor: 'pointer',
-    display: 'block',
-    '&:hover img': {
-        transform: 'scale(1.05)',
-        transition: 'transform 0.2s ease-in-out'
-    }
-});
 
 const Menu = ({ handleImageUpload, navigate }) => (
     <Card sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 600, margin: 'auto' }}>

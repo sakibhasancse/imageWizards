@@ -1,4 +1,7 @@
-import SvgColor from 'src/components/svg-color';
+import CompareIcon from '@mui/icons-material/Compare';
+
+import SvgColor from 'src/components/svg-color';  // Import the CompareIcon
+
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +23,7 @@ const navConfig = [
   {
     title: 'images',
     path: '/',
-    icon: icon('ic_cart'),
+    icon: <CompareIcon sx={{ width: 1, height: 1 }} />,
   },
   {
     title: 'feed',

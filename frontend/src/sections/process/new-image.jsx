@@ -5,12 +5,7 @@ import styled from '@mui/system/styled';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 
-const uploadedImages = [
-    'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
-    'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
-    'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg',
-    'https://static.remove.bg/uploader-examples/person/8_thumbnail.jpg'
-];
+import ImageButton from 'src/components/image/image';
 
 const AddImageButton = styled(IconButton)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -22,7 +17,7 @@ const AddImageButton = styled(IconButton)(({ theme }) => ({
     }
 }));
 
-const NewImageMenu = ({ handleImageUpload }) => (
+const NewImageMenu = ({ handleImageUpload, loadPreviewImage, uploadedImages }) => (
     <Grid container spacing={2} alignItems="center">
         <Grid item>
             <label htmlFor="add-image">
@@ -38,13 +33,23 @@ const NewImageMenu = ({ handleImageUpload }) => (
                 </AddImageButton>
             </label>
         </Grid>
-        {uploadedImages.map((src, index) => (
+        {uploadedImages.map((image, index) => (
             <Grid item key={index}>
-                <img
-                    src={src}
-                    alt={`uploaded-${index}`}
-                    style={{ width: '100px', height: '100px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}
-                />
+                <ImageButton
+                    type="button"
+                    onClick={() => loadPreviewImage(image)}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            loadPreviewImage(image);
+                        }
+                    }}
+                >
+                    <img
+                        src={image.org}
+                        alt={`uploaded-images-${index}`}
+                        style={{ width: '100px', height: '100px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}
+                    />
+                </ImageButton>
             </Grid>
         ))}
     </Grid>
@@ -52,6 +57,13 @@ const NewImageMenu = ({ handleImageUpload }) => (
 
 NewImageMenu.propTypes = {
     handleImageUpload: PropTypes.func.isRequired,
+    uploadedImages: PropTypes.arrayOf(
+        PropTypes.shape({
+            org: PropTypes.string.isRequired,
+            proc: PropTypes.string.isRequired
+        }).isRequired
+    ).isRequired,
+    loadPreviewImage: PropTypes.func.isRequired
 };
 
 export default NewImageMenu;

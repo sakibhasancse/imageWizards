@@ -17,6 +17,7 @@ const ProcessFileView = () => {
   const [originalImage, setOriginalImage] = useState(null);
   const [processedImage, setProcessedImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState([])
   const { name } = useParams();
   const navigate = useNavigate();
 
@@ -31,6 +32,9 @@ const ProcessFileView = () => {
   }, [name]);
 
   const handleImageUpload = (file) => {
+    if (processedImage) {
+      setUploadedImages((oldImage) => [...oldImage, { org: originalImage, proc: processedImage }])
+    }
     setOriginalImage(URL.createObjectURL(file));
 
     const formData = new FormData();
@@ -56,6 +60,11 @@ const ProcessFileView = () => {
     document.body.removeChild(link);
   };
 
+  const loadPreviewImage = (image) => {
+    setProcessedImage(image.proc)
+    setOriginalImage(image.org)
+  }
+
   return (
     <Container maxWidth="xl" sx={{ position: 'relative' }}>
       <Typography variant="h4" sx={{ mb: 5 }}>
@@ -78,6 +87,7 @@ const ProcessFileView = () => {
             <Grid item xs={12} md={6}>
               <ImageView imageSrc={originalImage} altText="Original Image" />
             </Grid>
+
             <Grid item xs={12} md={6}>
               {loading ? <ProgressBar loading={loading} /> :
                 <>
@@ -91,7 +101,11 @@ const ProcessFileView = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <NewImageMenu handleImageUpload={handleImageUpload} navigate={navigate} sx={{ position: 'absolute', bottom: 16, left: 16 }} />
+            <NewImageMenu handleImageUpload={handleImageUpload}
+              loadPreviewImage={loadPreviewImage}
+              uploadedImages={uploadedImages}
+              navigate={navigate}
+              sx={{ position: 'absolute', bottom: 16, left: 16 }} />
           </Grid>
         </>
       )
