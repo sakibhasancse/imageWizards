@@ -45,7 +45,11 @@ const ProcessFileView = () => {
     formData.append('task', taskInfo.task);
 
     uploadImage(formData).then(response => {
-      const processedFile = `data:image/jpeg;base64,${response.data.image}`
+      let processedFile = `data:image/jpeg;base64,${response.data.image}`
+      if (response.data.image_path) {
+        const baseUrl = import.meta.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:5000"
+        processedFile = `${baseUrl}/processed_images/${response.data.image_path}`
+      }
       setProcessedImage(processedFile);
 
       if (!isOldImage) {

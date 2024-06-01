@@ -3,6 +3,7 @@ from flask.helpers import send_from_directory
 from flask_cors import CORS
 import os
 from image_processing import process_image
+import uuid
 
 app = Flask(__name__)
 CORS(app, resources={r"/upload": {"origins": "*"}})
@@ -20,14 +21,20 @@ if not os.path.exists(UPLOAD_FOLDER):
 if not os.path.exists(PROCESSED_FOLDER):
     os.makedirs(PROCESSED_FOLDER)
 
+def generate_unique_filename(filename):
+    ext = filename.split('.')[-1]
+    unique_filename = f"{uuid.uuid4().hex}.{ext}"
+    return unique_filename
+
 @app.route('/upload', methods=['POST'])
 def upload_image():
     file = request.files['image']
     if not file:
         return jsonify({"error": "No file found"})
     task = request.form.get('task', 'extract_blood_vessels')
-
-    file_path = f'{UPLOAD_FOLDER}/{file.filename}'
+    unique_filename = generate_unique_filename(file.filename)
+    
+    file_path = f'{UPLOAD_FOLDER}/{unique_filename}'
     file.save(file_path)
     processed_path = process_image(file_path, task)
     return jsonify({'image_path': processed_path})

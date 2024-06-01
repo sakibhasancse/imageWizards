@@ -26,7 +26,7 @@ def process_image(image_path, task):
 
     print(f"Time taken for {task}: {time_taken:.2f} seconds")  # Print the time taken
 
-    return processed_image_path
+    return os.path.basename(image_path)
 
 def extract_blood_vessels(fundus_image_path):
     # Load the image
