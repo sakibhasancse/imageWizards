@@ -1,4 +1,7 @@
+import CompareIcon from '@mui/icons-material/Compare';
+
 import SvgColor from 'src/components/svg-color';
+
 
 // ----------------------------------------------------------------------
 
@@ -20,13 +23,13 @@ const navConfig = [
   {
     title: 'images',
     path: '/',
-    icon: icon('ic_cart'),
+    icon: <CompareIcon sx={{ width: 1, height: 1 }} />,
   },
-  {
-    title: 'feed',
-    path: '/blog',
-    icon: icon('ic_blog'),
-  },
+  // {
+  //   title: 'feed',
+  //   path: '/blog',
+  //   icon: icon('ic_blog'),
+  // },
   {
     title: 'login',
     path: '/login',

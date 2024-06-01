@@ -1,15 +1,32 @@
+import os
 import cv2
 import base64
 import numpy as np
+import time
+PROCESSED_FOLDER = './uploads/processed'
 
 def process_image(image_path, task):
+    start_time = time.time()  # Start the timer
+
+    # Adding a delay for testing purposes
+    time.sleep(2)  # Delay for 2 seconds
+
     if task == 'extract_blood_vessels':
         processed_image = extract_blood_vessels(image_path)
     elif task == 'extract_lesions':
         processed_image = extract_lesions(image_path)
+    else:
+        processed_image = cv2.imread(image_path)
 
-    _, buffer = cv2.imencode('.jpg', processed_image)
-    return base64.b64encode(buffer).decode('utf-8')
+    processed_image_path = os.path.join(PROCESSED_FOLDER, os.path.basename(image_path))
+    cv2.imwrite(processed_image_path, processed_image)
+
+    end_time = time.time()  # End the timer
+    time_taken = end_time - start_time  # Calculate the elapsed time
+
+    print(f"Time taken for {task}: {time_taken:.2f} seconds")  # Print the time taken
+
+    return os.path.basename(image_path)
 
 def extract_blood_vessels(fundus_image_path):
     # Load the image
