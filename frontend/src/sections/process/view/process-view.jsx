@@ -35,13 +35,17 @@ const ProcessFileView = () => {
     setTaskInfo(info);
   }, [name, navigate]);
 
-  const handleImageUpload = (file) => {
+  const handleImageUpload = (fileOrUrl) => {
     setLoading(true);
-    const newFile = URL.createObjectURL(file)
-    setOriginalImage(newFile);
+    let imageSrc;
+    if (typeof fileOrUrl === 'string') imageSrc = fileOrUrl; // It's a URL
+    else imageSrc = URL.createObjectURL(fileOrUrl) // It's a File
+
+    setOriginalImage(imageSrc);
 
     const formData = new FormData();
-    formData.append('image', file);
+    if (typeof fileOrUrl !== 'string') formData.append('image', fileOrUrl);
+    else formData.append('image_url', fileOrUrl);
     formData.append('task', taskInfo.task);
 
     uploadImage(formData).then(response => {
@@ -54,7 +58,7 @@ const ProcessFileView = () => {
 
       if (!isOldImage) {
         setOldImages((oldImage) => {
-          oldImage.unshift({ org: newFile, proc: processedFile })
+          oldImage.unshift({ org: imageSrc, proc: processedFile })
           return oldImage
         })
       } else setIsOldImage(false)
@@ -74,7 +78,7 @@ const ProcessFileView = () => {
     link.click();
     document.body.removeChild(link);
   };
-
+  
   const loadPreviewImage = (image) => {
     setProcessedImage(image.proc)
     setOriginalImage(image.org)
@@ -145,11 +149,11 @@ const getNameAndTaskByRoute = (path_name) => {
   if (path_name === 'lesion') {
     defaults.task = "extract_lesions";
     defaults.page_title = "Extract Lesions";
-    defaults.images = suggestedLesionsImages()
+    defaults.images = suggestedVesselImages()
   } else if (path_name === 'vessel') {
     defaults.task = "extract_blood_vessels";
     defaults.page_title = "Extract blood vessels";
-    defaults.images = suggestedVesselImages()
+    defaults.images = suggestedLesionsImages()
   } else defaults = null
 
 
@@ -165,7 +169,6 @@ const suggestedLesionsImages = () => {
     `${baseUrl}/assets/3.png`
   ];
 }
-
 
 const suggestedVesselImages = () => {
   const baseUrl = import.meta.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:5000"

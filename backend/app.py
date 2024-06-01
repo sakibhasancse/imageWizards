@@ -28,15 +28,31 @@ def generate_unique_filename(filename):
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
-    file = request.files['image']
-    if not file:
-        return jsonify({"error": "No file found"})
     task = request.form.get('task', 'extract_blood_vessels')
-    unique_filename = generate_unique_filename(file.filename)
+    file = request.files.get('image')
+    image_url = request.form.get('image_url')
+    processed_path = None
     
-    file_path = f'{UPLOAD_FOLDER}/{unique_filename}'
-    file.save(file_path)
-    processed_path = process_image(file_path, task)
+    if not file and not image_url:
+        return jsonify({"error": "No file or image URL provided"}), 400
+
+    if file:  # Working for user input image
+        original_filename = file.filename
+        unique_filename = generate_unique_filename(original_filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+        file.save(file_path)
+    elif image_url: # Working for suggest image
+        base_file_path = os.path.basename(image_url)
+        file_path = os.path.join(app.config['ASSETS_FOLDER'], base_file_path)
+        if not os.path.exists(file_path):
+            return jsonify({"error": "Image not found in assets"}), 404
+        
+        process_file_path = os.path.join(app.config['PROCESSED_FOLDER'], base_file_path)
+        if os.path.exists(process_file_path):
+            processed_path = base_file_path
+
+    if not processed_path:
+        processed_path = process_image(file_path, task)
     return jsonify({'image_path': processed_path})
 
 @app.route('/processed_images/<filename>')
