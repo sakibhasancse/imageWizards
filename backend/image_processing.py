@@ -1,6 +1,5 @@
 import os
 import cv2
-import base64
 import numpy as np
 import time
 PROCESSED_FOLDER = './uploads/processed'
@@ -9,7 +8,7 @@ def process_image(image_path, task):
     start_time = time.time()  # Start the timer
 
     # Adding a delay for testing purposes
-    time.sleep(2)  # Delay for 2 seconds
+    time.sleep(1)  # Delay for 1 seconds
 
     if task == 'extract_blood_vessels':
         processed_image = extract_blood_vessels(image_path)
@@ -28,9 +27,9 @@ def process_image(image_path, task):
 
     return os.path.basename(image_path)
 
-def extract_blood_vessels(fundus_image_path):
+def extract_blood_vessels(image_path):
     # Load the image
-    image = cv2.imread(fundus_image_path)
+    image = cv2.imread(image_path)
 
     # Convert to grayscale
     green_channel = image[:, :, 1]
