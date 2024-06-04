@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 
 const ImageView = ({ imageSrc, altText }) => (
     <Card sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <img src={imageSrc} alt={altText} style={{ maxWidth: '100%', height: 'auto' }} />
+        <img src={imageSrc} alt={altText} style={{ maxWidth: '100%', maxHeight: '400px', height: 'auto' }} />
         <Typography variant="h6">{altText}</Typography>
     </Card>
 );

@@ -6,7 +6,7 @@ export default function ProcessPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Dashboard | Image Wizers </title>
       </Helmet>
 
       <ProcessView />

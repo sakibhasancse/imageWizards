@@ -6,7 +6,10 @@ from image_processing import process_image
 import uuid
 
 app = Flask(__name__)
-CORS(app, resources={r"/upload": {"origins": "*"}})
+CORS(app, resources={
+    r"/upload": {"origins": "*"},
+    r"/processed_images/*": {"origins": "*"}
+})
 
 UPLOAD_FOLDER = './uploads/orginal'
 PROCESSED_FOLDER = './uploads/processed'

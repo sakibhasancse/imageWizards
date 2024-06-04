@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DownloadingOutlined from '@mui/icons-material/DownloadingOutlined';
 
 import { uploadImage } from 'src/services/api';
@@ -71,12 +73,19 @@ const ProcessFileView = () => {
   };
 
   const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = processedImage;
-    link.download = 'processed-image.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    fetch(processedImage)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'processed-image.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(err => console.error('Error downloading the image:', err));
   };
 
   const loadPreviewImage = (image) => {
@@ -87,9 +96,22 @@ const ProcessFileView = () => {
 
   return (
     <Container maxWidth="xl" sx={{ position: 'relative' }}>
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        {taskInfo.page_title}
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          startIcon={<ArrowBackIcon />}
+          sx={{ mt: 1, mb: 1, mr: 2 }}
+          onClick={() => navigate('/')}
+        >
+          Back
+      </Button>
+        <Typography variant="h4">
+          {taskInfo.page_title}
+        </Typography>
+      </Box>
 
       {
         !originalImage && (

@@ -47,7 +47,7 @@ const NewImageMenu = ({ handleImageUpload, loadPreviewImage, oldImages }) => (
                     <img
                         src={image.org}
                         alt={`uploaded-images-${index}`}
-                        style={{ width: '100px', height: '100px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}
+                        style={{ width: '80px', height: '80px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}
                     />
                 </ImageButton>
             </Grid>
