@@ -73,12 +73,19 @@ const ProcessFileView = () => {
   };
 
   const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = processedImage;
-    link.download = 'processed-image.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    fetch(processedImage)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'processed-image.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(err => console.error('Error downloading the image:', err));
   };
 
   const loadPreviewImage = (image) => {
