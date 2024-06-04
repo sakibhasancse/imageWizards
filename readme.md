@@ -5,8 +5,8 @@ This project provides a web application for image processing using React for the
 ## Table of Contents
 
 - [Getting Started](#getting-started)
-  - [Docker Setup](#docker-setup)
-  - [Manual Setup](#manual-setup)
+  - [Docker Setup (Option 1)](#docker-setup)
+  - [Manual Setup (Option 1)](#manual-setup)
 - [Technologies Used](#technologies-used)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -73,7 +73,7 @@ This project provides a web application for image processing using React for the
    npm start
    ```
 
-7. Access the application in your browser at `http://localhost:3000`.
+7. Access the application in your browser at `http://localhost:3030`.
 
 ## Usage
 
