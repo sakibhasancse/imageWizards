@@ -6,7 +6,7 @@ This project provides a web application for image processing using React for the
 
 - [Getting Started](#getting-started)
   - [Docker Setup (Option 1)](#docker-setup)
-  - [Manual Setup (Option 1)](#manual-setup)
+  - [Manual Setup (Option 2)](#manual-setup)
 - [Technologies Used](#technologies-used)
 - [Usage](#usage)
 - [Contributing](#contributing)
