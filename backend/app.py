@@ -8,7 +8,8 @@ import uuid
 app = Flask(__name__)
 CORS(app, resources={
     r"/upload": {"origins": "*"},
-    r"/processed_images/*": {"origins": "*"}
+    r"/processed_images/*": {"origins": "*"},
+    r"/assets/*": {"origins": "*"}
 })
 
 UPLOAD_FOLDER = './uploads/orginal'
