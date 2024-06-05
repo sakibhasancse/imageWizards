@@ -1,24 +1,20 @@
-# Stage 1: Build the application
-FROM node:18 AS builder
+# Use Node.js image as the base image
+FROM node:14
 
-# Setting up the work directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Installing dependencies
-COPY ./package.json ./
+# Copy package.json and package-lock.json to the container
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copying all the files in our project
+# Copy the rest of the application code
 COPY . .
 
-# Building our application
-RUN npm run build
+# Expose port 3000 (default React development server port)
+EXPOSE 3000
 
-# Stage 2: Serve the application with Nginx
-FROM nginx:latest
-
-# Copying built assets from the builder stage
-COPY --from=builder /app/build /usr/share/nginx/html
-
-# Copying our nginx.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Run the React development server
+CMD ["npm", "dev"]

@@ -5,8 +5,6 @@ This project provides a web application for image processing using React for the
 ## Table of Contents
 
 - [Getting Started](#getting-started)
-  - [Docker Setup (Option 1)](#docker-setup)
-  - [Manual Setup (Option 2)](#manual-setup)
 - [Technologies Used](#technologies-used)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -18,31 +16,6 @@ This project provides a web application for image processing using React for the
 - Docker Compose: Tool for defining and running multi-container Docker applications.
 
 ## Getting Started
-
-### Docker Setup
-
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/sakibhasancse/imageWizards.git
-   ```
-
-2. Navigate to the project directory:
-   ```sh
-   cd imageWizards
-   ```
-
-3. Build the Docker images using Docker Compose:
-   ```sh
-   docker-compose build
-   ```
-4. Start the Docker containers:
-   ```sh
-   docker-compose up
-   ```
-
-5. Access the application in your browser at `http://localhost:3000`.
-
-### Manual Setup
 
 1. Clone the repository:
    ```sh

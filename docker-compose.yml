@@ -4,23 +4,18 @@ services:
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     networks:
       - image-wizers
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    # command: ["npm", "run", "dev"]
+    depends_on:
+      - backend
 
   backend:
     build:
       context: ./backend
-    volumes:
-      - ./backend:/app
-      - ./backend/uploads:/app/uploads
+      dockerfile: Dockerfile
     ports:
       - "5500:5500"
     networks:
