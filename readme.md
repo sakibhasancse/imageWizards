@@ -31,12 +31,16 @@ This project provides a web application for image processing using React for the
    cd imageWizards
    ```
 
-3. Start the application using Docker Compose:
+3. Build the Docker images using Docker Compose:
+   ```sh
+   docker-compose build
+   ```
+4. Start the Docker containers:
    ```sh
    docker-compose up
    ```
 
-4. Access the application in your browser at `http://localhost:3000`.
+5. Access the application in your browser at `http://localhost:3000`.
 
 ### Manual Setup
 
@@ -50,30 +54,57 @@ This project provides a web application for image processing using React for the
    cd imageWizards
    ```
 
-3. Install dependencies for the frontend:
-   ```sh
-   cd frontend
-   npm install
-   ```
+Backend Setup (Python Flask)
 
-4. Install dependencies for the backend:
-   ```sh
-   cd backend
-   pip install -r requirements.txt
-   ```
 
-5. Start the backend server:
-   ```sh
-   python app.py
-   ```
+1.
+    ```sh
+    cd backend
+    ```
 
-6. Start the frontend development server:
-   ```sh
-   cd ..
-   npm start
-   ```
+2. **Create a virtual environment**:
+    ```sh
+    python -m venv venv
+    ```
 
-7. Access the application in your browser at `http://localhost:3030`.
+3. **Activate the virtual environment**:
+    - On Windows:
+        ```sh
+        venv\Scripts\activate
+        ```
+    - On macOS/Linux:
+        ```sh
+        source venv/bin/activate
+        ```
+
+4. **Install the dependencies**:
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+5. **Run the Flask application**:
+    ```sh
+    python app.py
+    ```
+
+Frontend Setup (ReactJs)
+
+1. **Navigate to the frontend directory**:
+    ```sh
+    cd ../frontend
+    ```
+
+2. **Install the dependencies**:
+    ```sh
+    npm install
+    ```
+
+3. **Run the frontend application**:
+    ```sh
+    npm run dev
+    ```
+
+Access the application in your browser at `http://localhost:3000`.
 
 ## Usage
 
